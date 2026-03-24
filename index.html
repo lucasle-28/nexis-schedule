@@ -78,7 +78,7 @@
   .team-3d-ai-education { background: #e6f5e8; color: #2e7d32; }
   .team-default { background: #f5f5f5; color: #777; }
 
-  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #ddd; }
 
   thead th {
     padding: 8px 6px;
@@ -88,7 +88,7 @@
     letter-spacing: 0.1em;
     color: #ccc;
     text-align: center;
-    border-bottom: 1px solid #eee;
+    border: 1px solid #ddd;
   }
 
   thead th:first-child { width: 80px; text-align: right; padding-right: 14px; }
@@ -101,6 +101,7 @@
     text-align: center;
     height: 30px;
     vertical-align: middle;
+    border: 1px solid #e5e5e5;
   }
 
   tbody td:first-child {
@@ -113,17 +114,10 @@
 
   tbody td.current-day-col { background: #fafafc; }
 
-  .event-cell {
-    border-radius: 4px;
-    padding: 3px 8px;
+  tbody td.has-event {
     font-weight: 500;
-    font-size: 0.66rem;
+    font-size: 0.68rem;
     letter-spacing: 0.01em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    max-width: 100%;
   }
 
   tbody tr.current-time-row td { border-bottom: 1.5px solid #1a1a1a; }
@@ -181,7 +175,7 @@ function build(data){
     const row=rows[r],t=fmtTime(row[0]);if(!t)continue;
     h+=`<tr${r===ct?' class="current-time-row"':''}><td>${t}</td>`;
     for(let d=0;d<7;d++){const v=(row[d+1]||'').trim(),dc=d===day?' current-day-col':'';
-      h+=v?`<td class="${dc}"><span class="event-cell ${teamClass(v)}">${v}</span></td>`:`<td class="${dc}"></td>`;}
+      h+=v?`<td class="has-event ${teamClass(v)}${dc}">${v}</td>`:`<td class="${dc}"></td>`;}
     h+='</tr>';}
   return h+'</tbody></table>';}
 

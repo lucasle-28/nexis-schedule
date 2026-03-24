@@ -268,17 +268,24 @@
 //  CONFIG — Update these URLs with your published sheet tabs
 // ============================================================
 
+// Schedule tab (gid=0, already set up)
 const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=0&single=true&output=csv';
 
+// Announcements tab — create a tab called "Announcements" with columns: Title, Detail
+// Then publish it: File > Share > Publish to web > select that tab > CSV
+// Replace the gid below with the actual gid from the published URL
 const ANNOUNCEMENTS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=2048449370&single=true&output=csv';
 
-const PHOTOS_URL = 'https://drive.google.com/uc?export=view&id=12_imyRlmYzt-S2PTvSmsfJi-37isxErt';
+// Photos tab — create a tab called "Photos" with column A = image URL
+// Then publish it the same way and replace the gid below
+const PHOTOS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=696102638&single=true&output=csv';
 
-const QR_CODE_URL = 'https://drive.google.com/file/d/12_imyRlmYzt-S2PTvSmsfJi-37isxErt/view?usp=sharing';
+// QR code image URL — replace when ready
+const QR_CODE_URL = 'https://drive.google.com/uc?export=view&id=12_imyRlmYzt-S2PTvSmsfJi-37isxErt';
 
 const REFRESH_INTERVAL = 5 * 60 * 1000;
-const ANNOUNCEMENT_CYCLE = 6000;
-const PHOTO_CYCLE = 8000;
+const ANNOUNCEMENT_CYCLE = 6000; // ms between announcements
+const PHOTO_CYCLE = 8000; // ms between photos
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 // ============================================================
@@ -305,13 +312,7 @@ function parseCSV(t) {
 function teamClass(n) {
   if (!n) return '';
   const k = n.toLowerCase().replace(/&/g,'').replace(/\s+/g,'-').replace(/--+/g,'-');
-  const m = {
-    'vr':'team-vr','iot':'team-iot',
-    'ds-sports-a':'team-ds-sports-a','ds-sports-b':'team-ds-sports-b',
-    'ai-gaming':'team-ai-gaming','ai-healthcare':'team-ai-healthcare','ai-education':'team-ai-education',
-    'ds-air-quality':'team-ds-air-quality','ds-newteam':'team-ds-newteam',
-    '3d-ds-sports-b':'team-3d-ds-sports-b','3d-ai-education':'team-3d-ai-education'
-  };
+  const m = {'vr':'team-vr','iot':'team-iot','ds-sports-a':'team-ds-sports-a','ds-sports-b':'team-ds-sports-b','ai-gaming':'team-ai-gaming','ai-healthcare':'team-ai-healthcare','ai-education':'team-ai-education','ds-air-quality':'team-ds-air-quality','ds-newteam':'team-ds-newteam','3d-ds-sports-b':'team-3d-ds-sports-b','3d-ai-education':'team-3d-ai-education'};
   return m[k] || 'team-default';
 }
 
@@ -377,6 +378,7 @@ async function fetchAnnouncements() {
     const r = await fetch(ANNOUNCEMENTS_URL);
     if (!r.ok) return;
     const data = parseCSV(await r.text());
+    // Skip header row, column A = title, column B = detail (optional)
     announcements = data.slice(1).filter(row => row[0]).map(row => ({
       title: row[0],
       detail: row[1] || ''
@@ -416,6 +418,7 @@ async function fetchPhotos() {
     const r = await fetch(PHOTOS_URL);
     if (!r.ok) return;
     const data = parseCSV(await r.text());
+    // Skip header row, column A = image URL
     photos = data.slice(1).map(row => row[0]).filter(url => url && url.startsWith('http'));
     renderPhoto();
   } catch(e) { console.error('Photos fetch error:', e); }

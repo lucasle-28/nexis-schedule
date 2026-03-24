@@ -258,7 +258,10 @@
   </div>
 
   <!-- Photos -->
-  <div class="photos-section" id="photos-container">
+  <div class="photos-section" id="photos-container-1">
+    <div class="no-photos">No photos yet</div>
+  </div>
+  <div class="photos-section" id="photos-container-2">
     <div class="no-photos">No photos yet</div>
   </div>
 </div>
@@ -281,8 +284,8 @@ const ANNOUNCEMENTS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt4
 const PHOTOS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=696102638&single=true&output=csv';
 
 // QR code image URL — replace when ready
-const QR_CODE_URL = 'https://lucasle-28.github.io/nexis-schedule/qr_code.png';
- 
+const QR_CODE_URL = 'https://drive.google.com/uc?export=view&id=12_imyRlmYzt-S2PTvSmsfJi-37isxErt';
+
 const REFRESH_INTERVAL = 5 * 60 * 1000;
 const ANNOUNCEMENT_CYCLE = 6000; // ms between announcements
 const PHOTO_CYCLE = 8000; // ms between photos
@@ -420,24 +423,32 @@ async function fetchPhotos() {
     const data = parseCSV(await r.text());
     // Skip header row, column A = image URL
     photos = data.slice(1).map(row => row[0]).filter(url => url && url.startsWith('http'));
-    renderPhoto();
+    renderPhotos();
   } catch(e) { console.error('Photos fetch error:', e); }
 }
 
-function renderPhoto() {
-  const c = document.getElementById('photos-container');
+function renderPhotos() {
+  const c1 = document.getElementById('photos-container-1');
+  const c2 = document.getElementById('photos-container-2');
   if (photos.length === 0) {
-    c.innerHTML = '<div class="no-photos">No photos yet</div>';
+    c1.innerHTML = '<div class="no-photos">No photos yet</div>';
+    c2.innerHTML = '<div class="no-photos">No photos yet</div>';
     return;
   }
-  const url = photos[photoIdx % photos.length];
-  c.innerHTML = `<img src="${url}" alt="Community photo" onerror="this.style.display='none'">`;
+  const url1 = photos[photoIdx % photos.length];
+  c1.innerHTML = `<img src="${url1}" alt="Community photo" onerror="this.style.display='none'">`;
+  if (photos.length > 1) {
+    const url2 = photos[(photoIdx + 1) % photos.length];
+    c2.innerHTML = `<img src="${url2}" alt="Community photo" onerror="this.style.display='none'">`;
+  } else {
+    c2.innerHTML = `<img src="${url1}" alt="Community photo" onerror="this.style.display='none'">`;
+  }
 }
 
 function cyclePhoto() {
   if (photos.length <= 1) return;
   photoIdx++;
-  renderPhoto();
+  renderPhotos();
 }
 
 // ============================================================

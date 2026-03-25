@@ -18,7 +18,7 @@
   }
 
   /* --- TOP: Header + Schedule --- */
-  .top-section { padding: 4px 10px 0; flex-shrink: 0; }
+  .top-section { padding: 4px 10px 0; flex-shrink: 0; display: flex; flex-direction: column; }
 
   header {
     display: flex;
@@ -48,28 +48,62 @@
   }
   .controls button:hover { color: #1a1a1a; border-color: #1a1a1a; }
 
-  /* Schedule table */
-  table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #ddd; }
+  /* Schedule wrapper — sticky header + scrollable body */
+  .schedule-wrapper {
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+  }
 
-  thead th {
+  /* Sticky table header */
+  .schedule-thead-fixed {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+  }
+  .schedule-thead-fixed table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #ddd;
+    border-bottom: none;
+  }
+  .schedule-thead-fixed th {
     padding: 3px 4px; font-weight: 500; font-size: 0.58rem;
     text-transform: uppercase; letter-spacing: 0.1em;
     color: #ccc; text-align: center; border: 1px solid #ddd;
+    background: #fff;
   }
-  thead th:first-child { width: 62px; text-align: right; padding-right: 6px; }
-  thead th.current-day { color: #1a1a1a; font-weight: 600; }
+  .schedule-thead-fixed th:first-child { width: 62px; text-align: right; padding-right: 6px; }
+  .schedule-thead-fixed th.current-day { color: #1a1a1a; font-weight: 600; }
 
-  tbody td {
+  /* Scrollable body */
+  .schedule-body-scroll {
+    overflow: hidden;
+    height: calc(100% - 22px); /* subtract header row height */
+  }
+  .schedule-body-scroll table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #ddd;
+    border-top: none;
+  }
+
+  /* Schedule table cells */
+  .schedule-body-scroll td {
     padding: 0 2px; font-size: 0.6rem; text-align: center;
     height: 18px; vertical-align: middle; border: 1px solid #e5e5e5;
   }
-  tbody td:first-child {
+  .schedule-body-scroll td:first-child {
     font-family: 'JetBrains Mono', monospace; font-size: 0.5rem;
     color: #d0d0d0; text-align: right; padding-right: 6px;
+    width: 62px;
   }
-  tbody td.current-day-col { background: #fafafc; }
-  tbody td.has-event { font-weight: 500; font-size: 0.55rem; letter-spacing: 0.01em; }
-  tbody tr.current-time-row td { border-bottom: 1.5px solid #1a1a1a; }
+  .schedule-body-scroll td.current-day-col { background: #fafafc; }
+  .schedule-body-scroll td.has-event { font-weight: 500; font-size: 0.55rem; letter-spacing: 0.01em; }
+  .schedule-body-scroll tr.current-time-row td { border-bottom: 1.5px solid #1a1a1a; }
 
   .status { text-align: center; padding: 20px; color: #ddd; font-size: 0.75rem; }
   .status.error { color: #e57373; }
@@ -81,13 +115,13 @@
 
   /* --- BOTTOM BAR --- */
   .bottom-bar {
-    flex: 1;
+    flex: 0 0 auto;
     display: flex;
     align-items: stretch;
     border-top: 1px solid #e5e5e5;
     margin: 6px 10px 6px;
     gap: 10px;
-    min-height: 0;
+    min-height: 120px;
     padding-top: 8px;
   }
 
@@ -217,23 +251,19 @@ const REFRESH_MS          = 5 * 60 * 1000;
 const ANNOUNCEMENT_CYCLE  = 8000;
 const PHOTO_CYCLE         = 8000;
 const ANN_PER_PAGE        = 3;
+const SCROLL_UPDATE_MS    = 30 * 1000; // re-check scroll position every 30s
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 // ============================================================
-//  KEYWORD → COLOR  (auto-detect & blend)
-//
-//  Just add a team to the sheet — as long as its name contains
-//  one of these keywords it gets colored automatically.
-//  Multi-keyword names like "3D & AI Education" are blended.
+//  KEYWORD → COLOR
 // ============================================================
 const KW = {
-  VR:  { bg:[182,215,168], fg:[39,78,19]   },  // green
-  IoT: { bg:[180,167,214], fg:[53,28,117]  },  // purple
-  DS:  { bg:[255,229,153], fg:[127,96,17]  },  // gold
-  AI:  { bg:[234,153,153], fg:[133,32,12]  },  // red-pink
-  '3D':{ bg:[147,210,190], fg:[18,84,63]   },  // teal
+  VR:  { bg:[182,215,168], fg:[39,78,19]   },
+  IoT: { bg:[180,167,214], fg:[53,28,117]  },
+  DS:  { bg:[255,229,153], fg:[127,96,17]  },
+  AI:  { bg:[234,153,153], fg:[133,32,12]  },
+  '3D':{ bg:[147,210,190], fg:[18,84,63]   },
 };
-// Check longer tokens first to avoid false positives
 const KW_ORDER = ['IoT','3D','VR','DS','AI'];
 
 function detectKW(text) {
@@ -255,7 +285,6 @@ function rgb(a) { return `rgb(${a[0]},${a[1]},${a[2]})`; }
 function cellStyle(text) {
   const keys = detectKW(text);
   if (keys.length === 0) {
-    // Non-empty but unrecognized → light neutral
     if (text && text.trim()) return { bg:'#ebebeb', fg:'#555' };
     return null;
   }
@@ -283,7 +312,7 @@ function parseCSV(t) {
 }
 
 // ============================================================
-//  Schedule
+//  Schedule — time helpers
 // ============================================================
 function fmtTime(r) {
   if (!r) return '';
@@ -298,54 +327,119 @@ function toMin(r) {
   if (m[4].toUpperCase()==='AM' && h===12) h=0;
   return h*60+mi;
 }
+
 function curRow(times) {
   const nm=new Date().getHours()*60+new Date().getMinutes();
   for (let i=0; i<times.length; i++) if (nm<toMin(times[i])) return i-1;
   return times.length-1;
 }
 
+// ============================================================
+//  Schedule — build split tables (fixed header + scrollable body)
+// ============================================================
 function buildSchedule(data) {
-  if (data.length<2) return '<div class="status error">No data</div>';
-  const rows=data.slice(1), day=new Date().getDay();
-  const times=rows.map(r=>r[0]), ct=curRow(times);
+  if (data.length < 2) return '<div class="status error">No data</div>';
+  const rows = data.slice(1), day = new Date().getDay();
+  const times = rows.map(r => r[0]), ct = curRow(times);
 
-  let h='<table><thead><tr><th></th>';
-  for (let d=0;d<7;d++) h+=`<th${d===day?' class="current-day"':''}>${DAYS[d].substring(0,3)}</th>`;
-  h+='</tr></thead><tbody>';
+  // Build header table
+  let thead = '<div class="schedule-thead-fixed"><table><thead><tr><th></th>';
+  for (let d = 0; d < 7; d++)
+    thead += `<th${d===day?' class="current-day"':''}>${DAYS[d].substring(0,3)}</th>`;
+  thead += '</tr></thead></table></div>';
 
-  for (let r=0;r<rows.length;r++) {
-    const row=rows[r], t=fmtTime(row[0]); if(!t) continue;
-    h+=`<tr${r===ct?' class="current-time-row"':''}><td>${t}</td>`;
-    for (let d=0;d<7;d++) {
-      const v=(row[d+1]||'').trim(), dc=d===day?' current-day-col':'';
+  // Build body table
+  let tbody = '<div class="schedule-body-scroll" id="schedule-scroll"><table><tbody>';
+  for (let r = 0; r < rows.length; r++) {
+    const row = rows[r], t = fmtTime(row[0]);
+    if (!t) continue;
+    // Add data-row-index so we can find the current-time row for scrolling
+    tbody += `<tr${r===ct?' class="current-time-row"':''} data-row-idx="${r}"><td>${t}</td>`;
+    for (let d = 0; d < 7; d++) {
+      const v = (row[d+1]||'').trim(), dc = d===day ? ' current-day-col' : '';
       if (v) {
-        const s=cellStyle(v);
-        const si=s?` style="background:${s.bg};color:${s.fg}"`:'';
-        h+=`<td class="has-event${dc}"${si}>${v}</td>`;
+        const s = cellStyle(v);
+        const si = s ? ` style="background:${s.bg};color:${s.fg}"` : '';
+        tbody += `<td class="has-event${dc}"${si}>${v}</td>`;
       } else {
-        h+=`<td class="${dc}"></td>`;
+        tbody += `<td class="${dc}"></td>`;
       }
     }
-    h+='</tr>';
+    tbody += '</tr>';
   }
-  return h+'</tbody></table>';
+  tbody += '</tbody></table></div>';
+
+  return '<div class="schedule-wrapper">' + thead + tbody + '</div>';
 }
 
+// ============================================================
+//  Auto-scroll: position current time row at the top of the
+//  visible area. Runs on build and every SCROLL_UPDATE_MS.
+// ============================================================
+function scrollToCurrentTime() {
+  const scrollContainer = document.getElementById('schedule-scroll');
+  if (!scrollContainer) return;
+
+  const currentRow = scrollContainer.querySelector('tr.current-time-row');
+  if (!currentRow) {
+    // If no current row (before first slot or after last), scroll to top or bottom
+    const now = new Date().getHours() * 60 + new Date().getMinutes();
+    if (now >= 23 * 60) {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    } else {
+      scrollContainer.scrollTop = 0;
+    }
+    return;
+  }
+
+  // Scroll so the current-time row is at the top of the visible area
+  const rowTop = currentRow.offsetTop;
+  scrollContainer.scrollTo({ top: rowTop, behavior: 'smooth' });
+}
+
+// ============================================================
+//  Fetch schedule + scroll
+// ============================================================
 async function fetchSchedule() {
-  const c=document.getElementById('schedule-container');
+  const c = document.getElementById('schedule-container');
   try {
-    const r=await fetch(SCHEDULE_URL); if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    c.innerHTML=buildSchedule(parseCSV(await r.text()));
-    document.getElementById('update-status').innerHTML=
+    const r = await fetch(SCHEDULE_URL);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    c.innerHTML = buildSchedule(parseCSV(await r.text()));
+
+    // Set the scroll container height dynamically
+    // It fills available space between header and bottom bar
+    const wrapper = c.querySelector('.schedule-wrapper');
+    if (wrapper) {
+      const topSection = document.querySelector('.top-section');
+      const bottomBar = document.querySelector('.bottom-bar');
+      const header = document.querySelector('header');
+      const available = window.innerHeight - header.offsetHeight - bottomBar.offsetHeight - 24; // 24px padding/margins
+      wrapper.style.height = available + 'px';
+
+      const theadFixed = wrapper.querySelector('.schedule-thead-fixed');
+      const scrollBody = document.getElementById('schedule-scroll');
+      if (theadFixed && scrollBody) {
+        scrollBody.style.height = (available - theadFixed.offsetHeight) + 'px';
+      }
+    }
+
+    // Scroll to current time after a brief layout settle
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => scrollToCurrentTime());
+    });
+
+    document.getElementById('update-status').innerHTML =
       `<span class="dot"></span>updated ${new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;
   } catch(e) {
-    console.error('Schedule fetch error:',e);
-    if (!c.querySelector('table')) c.innerHTML=`<div class="status error">${e.message}</div>`;
+    console.error('Schedule fetch error:', e);
+    if (!c.querySelector('table'))
+      c.innerHTML = `<div class="status error">${e.message}</div>`;
   }
 }
 
 // ============================================================
-//  Announcements — show up to 3 stacked, page through rest
+//  Announcements
 // ============================================================
 let announcements=[], annPage=0;
 
@@ -394,47 +488,24 @@ function cycleAnn() {
 }
 
 // ============================================================
-//  Photos — robust URL normalization + retry fallback
+//  Photos
 // ============================================================
 let photos=[], photoIdx=0;
 
-/**
- *  Normalizes common Google image URL formats into direct-embed URLs.
- *
- *  Supported:
- *    drive.google.com/file/d/ID/…     → /uc?export=view&id=ID
- *    drive.google.com/open?id=ID       → /uc?export=view&id=ID
- *    drive.google.com/uc?id=ID         → ensures export=view
- *    github.com/.../blob/…             → raw.githubusercontent.com
- *    photos.google.com/…/AF1Q…        → passes through (already direct)
- *    Anything else                     → returned unchanged
- */
 function normURL(url) {
   if (!url) return '';
   url=url.trim();
-
-  // Strip wrapping quotes some sheets leave behind
   if ((url.startsWith('"')&&url.endsWith('"'))||(url.startsWith("'")&&url.endsWith("'")))
     url=url.slice(1,-1);
-
   let m;
-
-  // Google Drive /file/d/ID
   m=url.match(/drive\.google\.com\/file\/d\/([A-Za-z0-9_-]+)/);
   if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
-
-  // Google Drive /open?id=ID
   m=url.match(/drive\.google\.com\/open\?id=([A-Za-z0-9_-]+)/);
   if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
-
-  // Google Drive /uc?id=ID
   m=url.match(/drive\.google\.com\/uc\?.*id=([A-Za-z0-9_-]+)/);
   if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
-
-  // GitHub blob → raw
   if (url.includes('github.com') && url.includes('/blob/'))
     return url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
-
   return url;
 }
 
@@ -454,7 +525,6 @@ function loadImg(container, url) {
   img.alt='Community photo';
   img.src=url;
   img.onerror=function() {
-    // Retry: if lh3 link, try /uc?export=view; if that, try lh3
     const idMatch=url.match(/lh3\.googleusercontent\.com\/d\/([A-Za-z0-9_-]+)/);
     if (idMatch && !this.dataset.retried) {
       this.dataset.retried='1';
@@ -527,9 +597,26 @@ setupQR(); tick();
 setInterval(tick, 1000);
 fetchAll();
 setInterval(fetchAll, REFRESH_MS);
+setInterval(scrollToCurrentTime, SCROLL_UPDATE_MS);
 setInterval(cycleAnn, ANNOUNCEMENT_CYCLE);
 setInterval(cyclePhoto, PHOTO_CYCLE);
-document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) fetchAll(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { fetchAll(); } });
+window.addEventListener('resize', () => {
+  // Recalculate scroll container height on resize
+  const wrapper = document.querySelector('.schedule-wrapper');
+  if (wrapper) {
+    const header = document.querySelector('header');
+    const bottomBar = document.querySelector('.bottom-bar');
+    const available = window.innerHeight - header.offsetHeight - bottomBar.offsetHeight - 24;
+    wrapper.style.height = available + 'px';
+    const theadFixed = wrapper.querySelector('.schedule-thead-fixed');
+    const scrollBody = document.getElementById('schedule-scroll');
+    if (theadFixed && scrollBody) {
+      scrollBody.style.height = (available - theadFixed.offsetHeight) + 'px';
+    }
+    scrollToCurrentTime();
+  }
+});
 </script>
 </body>
 </html>

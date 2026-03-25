@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -13,12 +12,11 @@
 body {
 background: #ffffff;
 color: #1a1a1a;
-font-family: ‘DM Sans’, sans-serif;
+font-family: 'DM Sans', sans-serif;
 display: flex;
 flex-direction: column;
 }
 
-/* — TOP: Header + Schedule — */
 .top-section { padding: 4px 10px 0; flex-shrink: 0; display: flex; flex-direction: column; }
 
 header {
@@ -37,7 +35,7 @@ height: 22px;
 display: flex;
 align-items: center;
 gap: 8px;
-font-family: ‘JetBrains Mono’, monospace;
+font-family: 'JetBrains Mono', monospace;
 }
 .meta .clock { font-size: 0.65rem; font-weight: 500; }
 .meta .update-line { font-size: 0.5rem; color: #ccc; }
@@ -45,18 +43,16 @@ font-family: ‘JetBrains Mono’, monospace;
 .controls button {
 background: #fff; color: #aaa; border: 1px solid #e8e8e8;
 padding: 1px 6px; border-radius: 2px; font-size: 0.5rem;
-cursor: pointer; font-family: ‘JetBrains Mono’, monospace;
+cursor: pointer; font-family: 'JetBrains Mono', monospace;
 }
 .controls button:hover { color: #1a1a1a; border-color: #1a1a1a; }
 
-/* Schedule wrapper — sticky header + scrollable body */
 .schedule-wrapper {
 position: relative;
 overflow: hidden;
 flex: 1;
 }
 
-/* Sticky table header */
 .schedule-thead-fixed {
 position: sticky;
 top: 0;
@@ -79,14 +75,13 @@ background: #fff;
 .schedule-thead-fixed th:first-child { width: 62px; text-align: right; padding-right: 6px; }
 .schedule-thead-fixed th.current-day { color: #1a1a1a; font-weight: 600; }
 
-/* Scrollable body */
 .schedule-body-scroll {
 overflow-y: auto;
-scrollbar-width: none; /* Firefox */
--ms-overflow-style: none; /* IE/Edge */
-height: calc(100% - 22px); /* subtract header row height */
+scrollbar-width: none;
+-ms-overflow-style: none;
+height: calc(100% - 22px);
 }
-.schedule-body-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+.schedule-body-scroll::-webkit-scrollbar { display: none; }
 .schedule-body-scroll table {
 width: 100%;
 border-collapse: collapse;
@@ -95,13 +90,12 @@ border: 1px solid #ddd;
 border-top: none;
 }
 
-/* Schedule table cells */
 .schedule-body-scroll td {
 padding: 0 2px; font-size: 0.6rem; text-align: center;
 height: 18px; vertical-align: middle; border: 1px solid #e5e5e5;
 }
 .schedule-body-scroll td:first-child {
-font-family: ‘JetBrains Mono’, monospace; font-size: 0.5rem;
+font-family: 'JetBrains Mono', monospace; font-size: 0.5rem;
 color: #d0d0d0; text-align: right; padding-right: 6px;
 width: 62px;
 }
@@ -117,7 +111,6 @@ display: inline-block; width: 5px; height: 5px;
 border-radius: 50%; background: #b8e6b8; margin-right: 4px;
 }
 
-/* — BOTTOM BAR — */
 .bottom-bar {
 flex: 0 0 140px;
 display: flex;
@@ -130,7 +123,6 @@ padding-top: 8px;
 overflow: hidden;
 }
 
-/* QR Code */
 .qr-section {
 flex: 0 0 auto;
 display: flex; flex-direction: column;
@@ -146,14 +138,13 @@ background: #fafafa; overflow: hidden;
 .qr-box img { width: 100%; height: 100%; object-fit: contain; }
 .qr-box .placeholder-text {
 font-size: 0.5rem; color: #ccc; text-align: center;
-padding: 4px; font-family: ‘JetBrains Mono’, monospace;
+padding: 4px; font-family: 'JetBrains Mono', monospace;
 }
 .qr-label {
 font-size: 0.48rem; color: #aaa; text-align: center;
 font-weight: 500; letter-spacing: 0.03em;
 }
 
-/* Announcements — stacked */
 .announcements-section {
 flex: 1; display: flex; flex-direction: column;
 min-width: 0; justify-content: center; padding: 0 8px;
@@ -184,7 +175,6 @@ background: #ddd; transition: background 0.3s;
 .page-dots span.active { background: #888; }
 .no-announcements { font-size: 0.6rem; color: #ddd; font-style: italic; }
 
-/* Photos */
 .photos-section {
 flex: 0 0 200px;
 display: flex; align-items: center; justify-content: center;
@@ -201,7 +191,6 @@ display: block;
 font-size: 0.55rem; color: #ddd; font-style: italic; text-align: center;
 }
 </style>
-
 </head>
 <body>
 
@@ -230,14 +219,12 @@ font-size: 0.55rem; color: #ddd; font-style: italic; text-align: center;
     </div>
     <div class="qr-label">Share your photos!</div>
   </div>
-
   <div class="announcements-section">
     <div class="announcements-header">Announcements</div>
     <div id="announcements-container">
       <div class="no-announcements">No announcements</div>
     </div>
   </div>
-
   <div class="photos-section" id="photos-container-1">
     <div class="no-photos">No photos yet</div>
   </div>
@@ -247,9 +234,6 @@ font-size: 0.55rem; color: #ddd; font-style: italic; text-align: center;
 </div>
 
 <script>
-// ============================================================
-//  CONFIG — Published Google Sheet CSV URLs
-// ============================================================
 const SCHEDULE_URL      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=0&single=true&output=csv';
 const ANNOUNCEMENTS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=2048449370&single=true&output=csv';
 const PHOTOS_URL        = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=696102638&single=true&output=csv';
@@ -259,12 +243,9 @@ const REFRESH_MS          = 5 * 60 * 1000;
 const ANNOUNCEMENT_CYCLE  = 8000;
 const PHOTO_CYCLE         = 8000;
 const ANN_PER_PAGE        = 3;
-const SCROLL_UPDATE_MS    = 30 * 1000; // re-check scroll position every 30s
+const SCROLL_UPDATE_MS    = 30 * 1000;
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-// ============================================================
-//  KEYWORD → COLOR
-// ============================================================
 const KW = {
   VR:  { bg:[182,215,168], fg:[39,78,19]   },
   IoT: { bg:[180,167,214], fg:[53,28,117]  },
@@ -279,7 +260,6 @@ function detectKW(text) {
   const u = text.toUpperCase();
   return KW_ORDER.filter(k => u.includes(k.toUpperCase()));
 }
-
 function blend(arrays) {
   if (!arrays.length) return null;
   if (arrays.length === 1) return arrays[0];
@@ -287,9 +267,7 @@ function blend(arrays) {
   for (const a of arrays) { s[0]+=a[0]; s[1]+=a[1]; s[2]+=a[2]; }
   return s.map(v => Math.round(v / arrays.length));
 }
-
 function rgb(a) { return `rgb(${a[0]},${a[1]},${a[2]})`; }
-
 function cellStyle(text) {
   const keys = detectKW(text);
   if (keys.length === 0) {
@@ -302,9 +280,6 @@ function cellStyle(text) {
   };
 }
 
-// ============================================================
-//  CSV Parser
-// ============================================================
 function parseCSV(t) {
   return t.trim().split('\n').map(line => {
     const r=[]; let c='', q=false;
@@ -319,9 +294,6 @@ function parseCSV(t) {
   });
 }
 
-// ============================================================
-//  Schedule — time helpers
-// ============================================================
 function fmtTime(r) {
   if (!r) return '';
   const m=r.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)/i);
@@ -335,33 +307,26 @@ function toMin(r) {
   if (m[4].toUpperCase()==='AM' && h===12) h=0;
   return h*60+mi;
 }
-
 function curRow(times) {
   const nm=new Date().getHours()*60+new Date().getMinutes();
   for (let i=0; i<times.length; i++) if (nm<toMin(times[i])) return i-1;
   return times.length-1;
 }
 
-// ============================================================
-//  Schedule — build split tables (fixed header + scrollable body)
-// ============================================================
 function buildSchedule(data) {
   if (data.length < 2) return '<div class="status error">No data</div>';
   const rows = data.slice(1), day = new Date().getDay();
   const times = rows.map(r => r[0]), ct = curRow(times);
 
-  // Build header table
   let thead = '<div class="schedule-thead-fixed"><table><thead><tr><th></th>';
   for (let d = 0; d < 7; d++)
     thead += `<th${d===day?' class="current-day"':''}>${DAYS[d].substring(0,3)}</th>`;
   thead += '</tr></thead></table></div>';
 
-  // Build body table
   let tbody = '<div class="schedule-body-scroll" id="schedule-scroll"><table><tbody>';
   for (let r = 0; r < rows.length; r++) {
     const row = rows[r], t = fmtTime(row[0]);
     if (!t) continue;
-    // Add data-row-index so we can find the current-time row for scrolling
     tbody += `<tr${r===ct?' class="current-time-row"':''} data-row-idx="${r}"><td>${t}</td>`;
     for (let d = 0; d < 7; d++) {
       const v = (row[d+1]||'').trim(), dc = d===day ? ' current-day-col' : '';
@@ -376,38 +341,28 @@ function buildSchedule(data) {
     tbody += '</tr>';
   }
   tbody += '</tbody></table></div>';
-
   return '<div class="schedule-wrapper">' + thead + tbody + '</div>';
 }
 
-// ============================================================
-//  Auto-scroll: position current time row at the top of the
-//  visible area. Runs on build and every SCROLL_UPDATE_MS.
-// ============================================================
+function calcHeight() {
+  const header = document.querySelector('header');
+  const bottomBar = document.querySelector('.bottom-bar');
+  return window.innerHeight - header.offsetHeight - bottomBar.offsetHeight - 24;
+}
+
 function scrollToCurrentTime(instant) {
   const scrollContainer = document.getElementById('schedule-scroll');
   if (!scrollContainer) return;
-
   const currentRow = scrollContainer.querySelector('tr.current-time-row');
   if (!currentRow) {
     const now = new Date().getHours() * 60 + new Date().getMinutes();
-    if (now >= 23 * 60) {
-      scrollContainer.scrollTop = scrollContainer.scrollHeight;
-    } else {
-      scrollContainer.scrollTop = 0;
-    }
+    if (now >= 23 * 60) scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    else scrollContainer.scrollTop = 0;
     return;
   }
-
-  currentRow.scrollIntoView({
-    block: 'center',
-    behavior: instant ? 'instant' : 'smooth'
-  });
+  currentRow.scrollIntoView({ block: 'center', behavior: instant ? 'instant' : 'smooth' });
 }
 
-// ============================================================
-//  Fetch schedule + scroll
-// ============================================================
 async function fetchSchedule() {
   const c = document.getElementById('schedule-container');
   try {
@@ -415,28 +370,19 @@ async function fetchSchedule() {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     c.innerHTML = buildSchedule(parseCSV(await r.text()));
 
-    // Set the scroll container height dynamically
-    // It fills available space between header and bottom bar
     const wrapper = c.querySelector('.schedule-wrapper');
     if (wrapper) {
-      const topSection = document.querySelector('.top-section');
-      const bottomBar = document.querySelector('.bottom-bar');
-      const header = document.querySelector('header');
-      const available = window.innerHeight - header.offsetHeight - bottomBar.offsetHeight - 24 - 36; // 36px = 1 hour less visible
+      const available = calcHeight();
       wrapper.style.height = available + 'px';
-
       const theadFixed = wrapper.querySelector('.schedule-thead-fixed');
       const scrollBody = document.getElementById('schedule-scroll');
       if (theadFixed && scrollBody) {
         scrollBody.style.height = (available - theadFixed.offsetHeight) + 'px';
       }
     }
-
-    // Scroll to current time after a brief layout settle
     requestAnimationFrame(() => {
       requestAnimationFrame(() => scrollToCurrentTime(true));
     });
-
     document.getElementById('update-status').innerHTML =
       `<span class="dot"></span>updated ${new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;
   } catch(e) {
@@ -446,161 +392,86 @@ async function fetchSchedule() {
   }
 }
 
-// ============================================================
-//  Announcements
-// ============================================================
 let announcements=[], annPage=0;
-
 async function fetchAnnouncements() {
   try {
     const r=await fetch(ANNOUNCEMENTS_URL); if(!r.ok) return;
     const data=parseCSV(await r.text());
     announcements=data.slice(1).filter(r=>r[0]&&r[0].trim()).map(r=>({
-      title: r[0].trim(),
-      detail: (r[1]||'').trim()
+      title: r[0].trim(), detail: (r[1]||'').trim()
     }));
-    annPage=0;
-    renderAnn();
+    annPage=0; renderAnn();
   } catch(e) { console.error('Ann fetch error:',e); }
 }
-
 function renderAnn() {
   const c=document.getElementById('announcements-container');
-  if (!announcements.length) {
-    c.innerHTML='<div class="no-announcements">No announcements</div>';
-    return;
-  }
+  if (!announcements.length) { c.innerHTML='<div class="no-announcements">No announcements</div>'; return; }
   const pages=Math.ceil(announcements.length/ANN_PER_PAGE);
   const p=annPage%pages;
   const slice=announcements.slice(p*ANN_PER_PAGE, p*ANN_PER_PAGE+ANN_PER_PAGE);
-
   let html='<div class="announcement-stack">';
-  for (const a of slice) {
-    html+=`<div class="announcement-item">${a.title}${a.detail?`<div class="announcement-sub">${a.detail}</div>`:''}
-    </div>`;
-  }
+  for (const a of slice) html+=`<div class="announcement-item">${a.title}${a.detail?`<div class="announcement-sub">${a.detail}</div>`:''}</div>`;
   html+='</div>';
-
-  if (pages>1) {
-    html+='<div class="page-dots">';
-    for (let i=0;i<pages;i++) html+=`<span class="${i===p?'active':''}"></span>`;
-    html+='</div>';
-  }
+  if (pages>1) { html+='<div class="page-dots">'; for (let i=0;i<pages;i++) html+=`<span class="${i===p?'active':''}"></span>`; html+='</div>'; }
   c.innerHTML=html;
 }
+function cycleAnn() { if (announcements.length<=ANN_PER_PAGE) return; annPage++; renderAnn(); }
 
-function cycleAnn() {
-  if (announcements.length<=ANN_PER_PAGE) return;
-  annPage++;
-  renderAnn();
-}
-
-// ============================================================
-//  Photos
-// ============================================================
 let photos=[], photoIdx=0;
-
 function normURL(url) {
-  if (!url) return '';
-  url=url.trim();
-  if ((url.startsWith('"')&&url.endsWith('"'))||(url.startsWith("'")&&url.endsWith("'")))
-    url=url.slice(1,-1);
+  if (!url) return ''; url=url.trim();
+  if ((url.startsWith('"')&&url.endsWith('"'))||(url.startsWith("'")&&url.endsWith("'"))) url=url.slice(1,-1);
   let m;
-  m=url.match(/drive\.google\.com\/file\/d\/([A-Za-z0-9_-]+)/);
-  if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
-  m=url.match(/drive\.google\.com\/open\?id=([A-Za-z0-9_-]+)/);
-  if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
-  m=url.match(/drive\.google\.com\/uc\?.*id=([A-Za-z0-9_-]+)/);
-  if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
-  if (url.includes('github.com') && url.includes('/blob/'))
-    return url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
+  m=url.match(/drive\.google\.com\/file\/d\/([A-Za-z0-9_-]+)/); if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
+  m=url.match(/drive\.google\.com\/open\?id=([A-Za-z0-9_-]+)/); if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
+  m=url.match(/drive\.google\.com\/uc\?.*id=([A-Za-z0-9_-]+)/); if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
+  if (url.includes('github.com') && url.includes('/blob/')) return url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
   return url;
 }
-
 async function fetchPhotos() {
   try {
     const r=await fetch(PHOTOS_URL); if(!r.ok) return;
     const data=parseCSV(await r.text());
     photos=data.slice(1).map(r=>normURL(r[0])).filter(u=>u&&u.startsWith('http'));
-    photoIdx=0;
-    renderPhotos();
+    photoIdx=0; renderPhotos();
   } catch(e) { console.error('Photos fetch error:',e); }
 }
-
 function loadImg(container, url) {
   if (!url) { container.innerHTML='<div class="no-photos">No photos yet</div>'; return; }
-  const img=document.createElement('img');
-  img.alt='Community photo';
-  img.src=url;
+  const img=document.createElement('img'); img.alt='Community photo'; img.src=url;
   img.onerror=function() {
     const idMatch=url.match(/lh3\.googleusercontent\.com\/d\/([A-Za-z0-9_-]+)/);
-    if (idMatch && !this.dataset.retried) {
-      this.dataset.retried='1';
-      this.src=`https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
-      return;
-    }
+    if (idMatch && !this.dataset.retried) { this.dataset.retried='1'; this.src=`https://drive.google.com/uc?export=view&id=${idMatch[1]}`; return; }
     const ucMatch=url.match(/[?&]id=([A-Za-z0-9_-]+)/);
-    if (ucMatch && !this.dataset.retried) {
-      this.dataset.retried='1';
-      this.src=`https://lh3.googleusercontent.com/d/${ucMatch[1]}`;
-      return;
-    }
+    if (ucMatch && !this.dataset.retried) { this.dataset.retried='1'; this.src=`https://lh3.googleusercontent.com/d/${ucMatch[1]}`; return; }
     this.style.display='none';
   };
-  container.innerHTML='';
-  container.appendChild(img);
+  container.innerHTML=''; container.appendChild(img);
 }
-
 function renderPhotos() {
-  const c1=document.getElementById('photos-container-1');
-  const c2=document.getElementById('photos-container-2');
-  if (!photos.length) {
-    c1.innerHTML='<div class="no-photos">No photos yet</div>';
-    c2.innerHTML='<div class="no-photos">No photos yet</div>';
-    return;
-  }
+  const c1=document.getElementById('photos-container-1'), c2=document.getElementById('photos-container-2');
+  if (!photos.length) { c1.innerHTML='<div class="no-photos">No photos yet</div>'; c2.innerHTML='<div class="no-photos">No photos yet</div>'; return; }
   loadImg(c1, photos[photoIdx%photos.length]);
   loadImg(c2, photos.length>1 ? photos[(photoIdx+1)%photos.length] : photos[0]);
 }
+function cyclePhoto() { if (photos.length<=1) return; photoIdx++; renderPhotos(); }
 
-function cyclePhoto() {
-  if (photos.length<=1) return;
-  photoIdx++;
-  renderPhotos();
-}
-
-// ============================================================
-//  QR Code
-// ============================================================
 function setupQR() {
   if (!QR_CODE_URL) return;
-  const box=document.getElementById('qr-box');
-  const img=document.createElement('img');
-  img.alt='QR Code';
-  img.src=normURL(QR_CODE_URL);
+  const box=document.getElementById('qr-box'), img=document.createElement('img');
+  img.alt='QR Code'; img.src=normURL(QR_CODE_URL);
   img.onerror=function(){ box.innerHTML='<div class="placeholder-text">QR CODE<br>COMING SOON</div>'; };
-  box.innerHTML='';
-  box.appendChild(img);
+  box.innerHTML=''; box.appendChild(img);
 }
-
-// ============================================================
-//  Utilities
-// ============================================================
 function goFullscreen() {
   const e=document.documentElement;
   (e.requestFullscreen||e.webkitRequestFullscreen||e.mozRequestFullScreen||e.msRequestFullscreen).call(e);
 }
 function tick() {
-  document.getElementById('clock').textContent=
-    new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit'});
+  document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit'});
 }
-async function fetchAll() {
-  await Promise.all([fetchSchedule(), fetchAnnouncements(), fetchPhotos()]);
-}
+async function fetchAll() { await Promise.all([fetchSchedule(), fetchAnnouncements(), fetchPhotos()]); }
 
-// ============================================================
-//  Init
-// ============================================================
 setupQR(); tick();
 setInterval(tick, 1000);
 fetchAll();
@@ -608,24 +479,18 @@ setInterval(fetchAll, REFRESH_MS);
 setInterval(scrollToCurrentTime, SCROLL_UPDATE_MS);
 setInterval(cycleAnn, ANNOUNCEMENT_CYCLE);
 setInterval(cyclePhoto, PHOTO_CYCLE);
-document.addEventListener('visibilitychange', () => { if (!document.hidden) { fetchAll(); } });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) fetchAll(); });
 window.addEventListener('resize', () => {
-  // Recalculate scroll container height on resize
   const wrapper = document.querySelector('.schedule-wrapper');
   if (wrapper) {
-    const header = document.querySelector('header');
-    const bottomBar = document.querySelector('.bottom-bar');
-    const available = window.innerHeight - header.offsetHeight - bottomBar.offsetHeight - 24 - 36;
+    const available = calcHeight();
     wrapper.style.height = available + 'px';
     const theadFixed = wrapper.querySelector('.schedule-thead-fixed');
     const scrollBody = document.getElementById('schedule-scroll');
-    if (theadFixed && scrollBody) {
-      scrollBody.style.height = (available - theadFixed.offsetHeight) + 'px';
-    }
+    if (theadFixed && scrollBody) scrollBody.style.height = (available - theadFixed.offsetHeight) + 'px';
     scrollToCurrentTime(true);
   }
 });
 </script>
-
 </body>
 </html>

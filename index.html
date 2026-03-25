@@ -121,7 +121,7 @@
     border-top: 1px solid #e5e5e5;
     margin: 6px 10px 6px;
     gap: 10px;
-    min-height: 120px;
+    min-height: 140px;
     padding-top: 8px;
   }
 
@@ -376,13 +376,12 @@ function buildSchedule(data) {
 //  Auto-scroll: position current time row at the top of the
 //  visible area. Runs on build and every SCROLL_UPDATE_MS.
 // ============================================================
-function scrollToCurrentTime() {
+function scrollToCurrentTime(instant) {
   const scrollContainer = document.getElementById('schedule-scroll');
   if (!scrollContainer) return;
 
   const currentRow = scrollContainer.querySelector('tr.current-time-row');
   if (!currentRow) {
-    // If no current row (before first slot or after last), scroll to top or bottom
     const now = new Date().getHours() * 60 + new Date().getMinutes();
     if (now >= 23 * 60) {
       scrollContainer.scrollTop = scrollContainer.scrollHeight;
@@ -392,12 +391,22 @@ function scrollToCurrentTime() {
     return;
   }
 
-  // Scroll so the current-time row is centered in the visible area
-  const rowTop = currentRow.offsetTop;
+  // Use getBoundingClientRect for reliable offset calculation
+  const containerRect = scrollContainer.getBoundingClientRect();
+  const rowRect = currentRow.getBoundingClientRect();
+  const currentScrollTop = scrollContainer.scrollTop;
+
+  // Where the row currently is relative to the container top + current scroll
+  const rowOffsetInScroll = rowRect.top - containerRect.top + currentScrollTop;
   const containerHeight = scrollContainer.clientHeight;
   const rowHeight = currentRow.offsetHeight;
-  const scrollTarget = rowTop - (containerHeight / 2) + (rowHeight / 2);
-  scrollContainer.scrollTo({ top: Math.max(0, scrollTarget), behavior: 'smooth' });
+
+  // Center the row in the visible area
+  const scrollTarget = rowOffsetInScroll - (containerHeight / 2) + (rowHeight / 2);
+  scrollContainer.scrollTo({
+    top: Math.max(0, scrollTarget),
+    behavior: instant ? 'instant' : 'smooth'
+  });
 }
 
 // ============================================================
@@ -429,7 +438,7 @@ async function fetchSchedule() {
 
     // Scroll to current time after a brief layout settle
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => scrollToCurrentTime());
+      requestAnimationFrame(() => scrollToCurrentTime(true));
     });
 
     document.getElementById('update-status').innerHTML =
@@ -617,7 +626,7 @@ window.addEventListener('resize', () => {
     if (theadFixed && scrollBody) {
       scrollBody.style.height = (available - theadFixed.offsetHeight) + 'px';
     }
-    scrollToCurrentTime();
+    scrollToCurrentTime(true);
   }
 });
 </script>

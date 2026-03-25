@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html, body { height: 100%; overflow: hidden; }
 
   body {
@@ -49,20 +48,7 @@
   }
   .controls button:hover { color: #1a1a1a; border-color: #1a1a1a; }
 
-  /* Team colors */
-  .team-vr { background: #e6f4f2; color: #2a8a7e; }
-  .team-iot { background: #eee8f6; color: #6a4fb5; }
-  .team-ds-sports-a { background: #fef4e0; color: #c67a00; }
-  .team-ds-sports-b { background: #fef4e0; color: #c67a00; }
-  .team-ai-gaming { background: #fde8ec; color: #c93c54; }
-  .team-ai-healthcare { background: #fde8ec; color: #c93c54; }
-  .team-ai-education { background: #fde8ec; color: #c93c54; }
-  .team-ds-air-quality { background: #e4f0fd; color: #2d6fc1; }
-  .team-ds-newteam { background: #fef0e4; color: #c05e1a; }
-  .team-3d-ds-sports-b { background: #e6f5e8; color: #2e7d32; }
-  .team-3d-ai-education { background: #e6f5e8; color: #2e7d32; }
-  .team-default { background: #f5f5f5; color: #777; }
-
+  /* Schedule table */
   table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #ddd; }
 
   thead th {
@@ -108,115 +94,70 @@
   /* QR Code */
   .qr-section {
     flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 0 6px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px; padding: 0 6px;
   }
-
   .qr-box {
-    width: 100px;
-    height: 100px;
-    border: 2px dashed #ddd;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fafafa;
-    overflow: hidden;
+    width: 100px; height: 100px;
+    border: 2px dashed #ddd; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    background: #fafafa; overflow: hidden;
   }
-
-  .qr-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
+  .qr-box img { width: 100%; height: 100%; object-fit: contain; }
   .qr-box .placeholder-text {
-    font-size: 0.5rem;
-    color: #ccc;
-    text-align: center;
-    padding: 4px;
-    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem; color: #ccc; text-align: center;
+    padding: 4px; font-family: 'JetBrains Mono', monospace;
   }
-
   .qr-label {
-    font-size: 0.48rem;
-    color: #aaa;
-    text-align: center;
-    font-weight: 500;
-    letter-spacing: 0.03em;
+    font-size: 0.48rem; color: #aaa; text-align: center;
+    font-weight: 500; letter-spacing: 0.03em;
   }
 
-  /* Announcements */
+  /* Announcements — stacked */
   .announcements-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    justify-content: center;
-    padding: 0 8px;
+    flex: 1; display: flex; flex-direction: column;
+    min-width: 0; justify-content: center; padding: 0 8px;
   }
-
   .announcements-header {
-    font-size: 0.52rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #bbb;
-    margin-bottom: 6px;
+    font-size: 0.52rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.1em; color: #bbb; margin-bottom: 6px;
   }
-
+  .announcement-stack {
+    display: flex; flex-direction: column; gap: 5px;
+  }
   .announcement-item {
-    display: none;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: #333;
-    line-height: 1.4;
+    font-size: 0.7rem; font-weight: 500; color: #333; line-height: 1.35;
+    border-left: 2px solid #ddd; padding-left: 8px;
+    animation: fadeIn 0.4s ease;
   }
-
-  .announcement-item.active { display: block; }
-
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
   .announcement-sub {
-    font-size: 0.55rem;
-    color: #aaa;
-    margin-top: 3px;
-    font-weight: 400;
+    font-size: 0.5rem; color: #aaa; margin-top: 1px; font-weight: 400;
   }
-
-  .no-announcements {
-    font-size: 0.6rem;
-    color: #ddd;
-    font-style: italic;
+  .page-dots {
+    display: flex; gap: 4px; margin-top: 6px; justify-content: center;
   }
+  .page-dots span {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: #ddd; transition: background 0.3s;
+  }
+  .page-dots span.active { background: #888; }
+  .no-announcements { font-size: 0.6rem; color: #ddd; font-style: italic; }
 
   /* Photos */
   .photos-section {
     flex: 0 0 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 6px;
-    background: #fafafa;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; border-radius: 6px; background: #fafafa;
     position: relative;
   }
-
   .photos-section img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 4px;
-    transition: opacity 0.5s;
+    max-width: 100%; max-height: 100%; object-fit: contain;
+    border-radius: 4px; transition: opacity 0.5s;
   }
-
   .photos-section .no-photos {
-    font-size: 0.55rem;
-    color: #ddd;
-    font-style: italic;
-    text-align: center;
+    font-size: 0.55rem; color: #ddd; font-style: italic; text-align: center;
   }
 </style>
 </head>
@@ -241,7 +182,6 @@
 </div>
 
 <div class="bottom-bar">
-  <!-- QR Code -->
   <div class="qr-section">
     <div class="qr-box" id="qr-box">
       <div class="placeholder-text">QR CODE<br>COMING SOON</div>
@@ -249,7 +189,6 @@
     <div class="qr-label">Share your photos!</div>
   </div>
 
-  <!-- Announcements -->
   <div class="announcements-section">
     <div class="announcements-header">Announcements</div>
     <div id="announcements-container">
@@ -257,7 +196,6 @@
     </div>
   </div>
 
-  <!-- Photos -->
   <div class="photos-section" id="photos-container-1">
     <div class="no-photos">No photos yet</div>
   </div>
@@ -268,41 +206,76 @@
 
 <script>
 // ============================================================
-//  CONFIG — Update these URLs with your published sheet tabs
+//  CONFIG — Published Google Sheet CSV URLs
 // ============================================================
-
-// Schedule tab (gid=0, already set up)
-const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=0&single=true&output=csv';
-
-// Announcements tab — create a tab called "Announcements" with columns: Title, Detail
-// Then publish it: File > Share > Publish to web > select that tab > CSV
-// Replace the gid below with the actual gid from the published URL
+const SCHEDULE_URL      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=0&single=true&output=csv';
 const ANNOUNCEMENTS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=2048449370&single=true&output=csv';
+const PHOTOS_URL        = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=696102638&single=true&output=csv';
+const QR_CODE_URL       = 'https://raw.githubusercontent.com/lucasle-28/nexis-schedule/main/qrcode.png';
 
-// Photos tab — create a tab called "Photos" with column A = image URL
-// Then publish it the same way and replace the gid below
-const PHOTOS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgt41gOVD2hcpqHVdsl_XFKbGqCMQy1GXiVnsVcN8zP22h1B2cluC7CuTnG9FeL12QrkovEHpf6_Jc/pub?gid=696102638&single=true&output=csv';
-
-// QR code image URL — replace when ready
-const QR_CODE_URL = 'https://raw.githubusercontent.com/lucasle-28/nexis-schedule/main/qrcode.png';
-
-const REFRESH_INTERVAL = 5 * 60 * 1000;
-const ANNOUNCEMENT_CYCLE = 6000; // ms between announcements
-const PHOTO_CYCLE = 8000; // ms between photos
+const REFRESH_MS          = 5 * 60 * 1000;
+const ANNOUNCEMENT_CYCLE  = 8000;
+const PHOTO_CYCLE         = 8000;
+const ANN_PER_PAGE        = 3;
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+// ============================================================
+//  KEYWORD → COLOR  (auto-detect & blend)
+//
+//  Just add a team to the sheet — as long as its name contains
+//  one of these keywords it gets colored automatically.
+//  Multi-keyword names like "3D & AI Education" are blended.
+// ============================================================
+const KW = {
+  VR:  { bg:[182,215,168], fg:[39,78,19]   },  // green
+  IoT: { bg:[180,167,214], fg:[53,28,117]  },  // purple
+  DS:  { bg:[255,229,153], fg:[127,96,17]  },  // gold
+  AI:  { bg:[234,153,153], fg:[133,32,12]  },  // red-pink
+  '3D':{ bg:[147,210,190], fg:[18,84,63]   },  // teal
+};
+// Check longer tokens first to avoid false positives
+const KW_ORDER = ['IoT','3D','VR','DS','AI'];
+
+function detectKW(text) {
+  if (!text) return [];
+  const u = text.toUpperCase();
+  return KW_ORDER.filter(k => u.includes(k.toUpperCase()));
+}
+
+function blend(arrays) {
+  if (!arrays.length) return null;
+  if (arrays.length === 1) return arrays[0];
+  const s = [0,0,0];
+  for (const a of arrays) { s[0]+=a[0]; s[1]+=a[1]; s[2]+=a[2]; }
+  return s.map(v => Math.round(v / arrays.length));
+}
+
+function rgb(a) { return `rgb(${a[0]},${a[1]},${a[2]})`; }
+
+function cellStyle(text) {
+  const keys = detectKW(text);
+  if (keys.length === 0) {
+    // Non-empty but unrecognized → light neutral
+    if (text && text.trim()) return { bg:'#ebebeb', fg:'#555' };
+    return null;
+  }
+  return {
+    bg: rgb(blend(keys.map(k => KW[k].bg))),
+    fg: rgb(blend(keys.map(k => KW[k].fg)))
+  };
+}
 
 // ============================================================
 //  CSV Parser
 // ============================================================
 function parseCSV(t) {
-  const l = t.trim().split('\n');
-  return l.map(line => {
-    const r = []; let c = '', q = false;
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch === '"') q = !q;
-      else if (ch === ',' && !q) { r.push(c.trim()); c = ''; }
-      else c += ch;
+  return t.trim().split('\n').map(line => {
+    const r=[]; let c='', q=false;
+    for (let i=0; i<line.length; i++) {
+      const ch=line[i];
+      if (ch==='"') q=!q;
+      else if (ch===',' && !q) { r.push(c.trim()); c=''; }
+      else c+=ch;
     }
     r.push(c.trim());
     return r;
@@ -312,141 +285,208 @@ function parseCSV(t) {
 // ============================================================
 //  Schedule
 // ============================================================
-function teamClass(n) {
-  if (!n) return '';
-  const k = n.toLowerCase().replace(/&/g,'').replace(/\s+/g,'-').replace(/--+/g,'-');
-  const m = {'vr':'team-vr','iot':'team-iot','ds-sports-a':'team-ds-sports-a','ds-sports-b':'team-ds-sports-b','ai-gaming':'team-ai-gaming','ai-healthcare':'team-ai-healthcare','ai-education':'team-ai-education','ds-air-quality':'team-ds-air-quality','ds-newteam':'team-ds-newteam','3d-ds-sports-b':'team-3d-ds-sports-b','3d-ai-education':'team-3d-ai-education'};
-  return m[k] || 'team-default';
-}
-
 function fmtTime(r) {
   if (!r) return '';
-  const m = r.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)/i);
+  const m=r.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)/i);
   return m ? `${m[1]}:${m[2]} ${m[4].toUpperCase()}` : r;
 }
-
+function toMin(r) {
+  const m=r.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)/i);
+  if (!m) return -1;
+  let h=+m[1], mi=+m[2];
+  if (m[4].toUpperCase()==='PM' && h!==12) h+=12;
+  if (m[4].toUpperCase()==='AM' && h===12) h=0;
+  return h*60+mi;
+}
 function curRow(times) {
-  const now = new Date(), nm = now.getHours() * 60 + now.getMinutes();
-  for (let i = 0; i < times.length; i++) {
-    const m = times[i].match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)/i);
-    if (!m) continue;
-    let h = +m[1], mi = +m[2];
-    if (m[4].toUpperCase() === 'PM' && h !== 12) h += 12;
-    if (m[4].toUpperCase() === 'AM' && h === 12) h = 0;
-    if (nm < h * 60 + mi) return i - 1;
-  }
-  return times.length - 1;
+  const nm=new Date().getHours()*60+new Date().getMinutes();
+  for (let i=0; i<times.length; i++) if (nm<toMin(times[i])) return i-1;
+  return times.length-1;
 }
 
 function buildSchedule(data) {
-  if (data.length < 2) return '<div class="status error">No data</div>';
-  const rows = data.slice(1), day = new Date().getDay(), times = rows.map(r => r[0]), ct = curRow(times);
-  let h = '<table><thead><tr><th></th>';
-  for (let d = 0; d < 7; d++) h += `<th${d === day ? ' class="current-day"' : ''}>${DAYS[d].substring(0,3)}</th>`;
-  h += '</tr></thead><tbody>';
-  for (let r = 0; r < rows.length; r++) {
-    const row = rows[r], t = fmtTime(row[0]); if (!t) continue;
-    h += `<tr${r === ct ? ' class="current-time-row"' : ''}><td>${t}</td>`;
-    for (let d = 0; d < 7; d++) {
-      const v = (row[d+1]||'').trim(), dc = d === day ? ' current-day-col' : '';
-      h += v ? `<td class="has-event ${teamClass(v)}${dc}">${v}</td>` : `<td class="${dc}"></td>`;
+  if (data.length<2) return '<div class="status error">No data</div>';
+  const rows=data.slice(1), day=new Date().getDay();
+  const times=rows.map(r=>r[0]), ct=curRow(times);
+
+  let h='<table><thead><tr><th></th>';
+  for (let d=0;d<7;d++) h+=`<th${d===day?' class="current-day"':''}>${DAYS[d].substring(0,3)}</th>`;
+  h+='</tr></thead><tbody>';
+
+  for (let r=0;r<rows.length;r++) {
+    const row=rows[r], t=fmtTime(row[0]); if(!t) continue;
+    h+=`<tr${r===ct?' class="current-time-row"':''}><td>${t}</td>`;
+    for (let d=0;d<7;d++) {
+      const v=(row[d+1]||'').trim(), dc=d===day?' current-day-col':'';
+      if (v) {
+        const s=cellStyle(v);
+        const si=s?` style="background:${s.bg};color:${s.fg}"`:'';
+        h+=`<td class="has-event${dc}"${si}>${v}</td>`;
+      } else {
+        h+=`<td class="${dc}"></td>`;
+      }
     }
-    h += '</tr>';
+    h+='</tr>';
   }
-  return h + '</tbody></table>';
+  return h+'</tbody></table>';
 }
 
 async function fetchSchedule() {
-  const c = document.getElementById('schedule-container');
+  const c=document.getElementById('schedule-container');
   try {
-    const r = await fetch(SCHEDULE_URL);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    c.innerHTML = buildSchedule(parseCSV(await r.text()));
-    document.getElementById('update-status').innerHTML =
+    const r=await fetch(SCHEDULE_URL); if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    c.innerHTML=buildSchedule(parseCSV(await r.text()));
+    document.getElementById('update-status').innerHTML=
       `<span class="dot"></span>updated ${new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;
   } catch(e) {
-    if (!c.querySelector('table')) c.innerHTML = `<div class="status error">${e.message}</div>`;
+    console.error('Schedule fetch error:',e);
+    if (!c.querySelector('table')) c.innerHTML=`<div class="status error">${e.message}</div>`;
   }
 }
 
 // ============================================================
-//  Announcements
+//  Announcements — show up to 3 stacked, page through rest
 // ============================================================
-let announcements = [];
-let annIdx = 0;
+let announcements=[], annPage=0;
 
 async function fetchAnnouncements() {
-  if (ANNOUNCEMENTS_URL.includes('REPLACE_WITH')) return;
   try {
-    const r = await fetch(ANNOUNCEMENTS_URL);
-    if (!r.ok) return;
-    const data = parseCSV(await r.text());
-    // Skip header row, column A = title, column B = detail (optional)
-    announcements = data.slice(1).filter(row => row[0]).map(row => ({
-      title: row[0],
-      detail: row[1] || ''
+    const r=await fetch(ANNOUNCEMENTS_URL); if(!r.ok) return;
+    const data=parseCSV(await r.text());
+    announcements=data.slice(1).filter(r=>r[0]&&r[0].trim()).map(r=>({
+      title: r[0].trim(),
+      detail: (r[1]||'').trim()
     }));
-    renderAnnouncement();
-  } catch(e) { console.error('Announcements fetch error:', e); }
+    annPage=0;
+    renderAnn();
+  } catch(e) { console.error('Ann fetch error:',e); }
 }
 
-function renderAnnouncement() {
-  const c = document.getElementById('announcements-container');
-  if (announcements.length === 0) {
-    c.innerHTML = '<div class="no-announcements">No announcements</div>';
+function renderAnn() {
+  const c=document.getElementById('announcements-container');
+  if (!announcements.length) {
+    c.innerHTML='<div class="no-announcements">No announcements</div>';
     return;
   }
-  const a = announcements[annIdx % announcements.length];
-  c.innerHTML = `<div class="announcement-item active">
-    ${a.title}
-    ${a.detail ? `<div class="announcement-sub">${a.detail}</div>` : ''}
-  </div>`;
+  const pages=Math.ceil(announcements.length/ANN_PER_PAGE);
+  const p=annPage%pages;
+  const slice=announcements.slice(p*ANN_PER_PAGE, p*ANN_PER_PAGE+ANN_PER_PAGE);
+
+  let html='<div class="announcement-stack">';
+  for (const a of slice) {
+    html+=`<div class="announcement-item">${a.title}${a.detail?`<div class="announcement-sub">${a.detail}</div>`:''}
+    </div>`;
+  }
+  html+='</div>';
+
+  if (pages>1) {
+    html+='<div class="page-dots">';
+    for (let i=0;i<pages;i++) html+=`<span class="${i===p?'active':''}"></span>`;
+    html+='</div>';
+  }
+  c.innerHTML=html;
 }
 
-function cycleAnnouncement() {
-  if (announcements.length <= 1) return;
-  annIdx++;
-  renderAnnouncement();
+function cycleAnn() {
+  if (announcements.length<=ANN_PER_PAGE) return;
+  annPage++;
+  renderAnn();
 }
 
 // ============================================================
-//  Photos
+//  Photos — robust URL normalization + retry fallback
 // ============================================================
-let photos = [];
-let photoIdx = 0;
+let photos=[], photoIdx=0;
+
+/**
+ *  Normalizes common Google image URL formats into direct-embed URLs.
+ *
+ *  Supported:
+ *    drive.google.com/file/d/ID/…     → /uc?export=view&id=ID
+ *    drive.google.com/open?id=ID       → /uc?export=view&id=ID
+ *    drive.google.com/uc?id=ID         → ensures export=view
+ *    github.com/.../blob/…             → raw.githubusercontent.com
+ *    photos.google.com/…/AF1Q…        → passes through (already direct)
+ *    Anything else                     → returned unchanged
+ */
+function normURL(url) {
+  if (!url) return '';
+  url=url.trim();
+
+  // Strip wrapping quotes some sheets leave behind
+  if ((url.startsWith('"')&&url.endsWith('"'))||(url.startsWith("'")&&url.endsWith("'")))
+    url=url.slice(1,-1);
+
+  let m;
+
+  // Google Drive /file/d/ID
+  m=url.match(/drive\.google\.com\/file\/d\/([A-Za-z0-9_-]+)/);
+  if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
+
+  // Google Drive /open?id=ID
+  m=url.match(/drive\.google\.com\/open\?id=([A-Za-z0-9_-]+)/);
+  if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
+
+  // Google Drive /uc?id=ID
+  m=url.match(/drive\.google\.com\/uc\?.*id=([A-Za-z0-9_-]+)/);
+  if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`;
+
+  // GitHub blob → raw
+  if (url.includes('github.com') && url.includes('/blob/'))
+    return url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
+
+  return url;
+}
 
 async function fetchPhotos() {
-  if (PHOTOS_URL.includes('REPLACE_WITH')) return;
   try {
-    const r = await fetch(PHOTOS_URL);
-    if (!r.ok) return;
-    const data = parseCSV(await r.text());
-    // Skip header row, column A = image URL
-    photos = data.slice(1).map(row => row[0]).filter(url => url && url.startsWith('http'));
+    const r=await fetch(PHOTOS_URL); if(!r.ok) return;
+    const data=parseCSV(await r.text());
+    photos=data.slice(1).map(r=>normURL(r[0])).filter(u=>u&&u.startsWith('http'));
+    photoIdx=0;
     renderPhotos();
-  } catch(e) { console.error('Photos fetch error:', e); }
+  } catch(e) { console.error('Photos fetch error:',e); }
+}
+
+function loadImg(container, url) {
+  if (!url) { container.innerHTML='<div class="no-photos">No photos yet</div>'; return; }
+  const img=document.createElement('img');
+  img.alt='Community photo';
+  img.src=url;
+  img.onerror=function() {
+    // Retry: if lh3 link, try /uc?export=view; if that, try lh3
+    const idMatch=url.match(/lh3\.googleusercontent\.com\/d\/([A-Za-z0-9_-]+)/);
+    if (idMatch && !this.dataset.retried) {
+      this.dataset.retried='1';
+      this.src=`https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
+      return;
+    }
+    const ucMatch=url.match(/[?&]id=([A-Za-z0-9_-]+)/);
+    if (ucMatch && !this.dataset.retried) {
+      this.dataset.retried='1';
+      this.src=`https://lh3.googleusercontent.com/d/${ucMatch[1]}`;
+      return;
+    }
+    this.style.display='none';
+  };
+  container.innerHTML='';
+  container.appendChild(img);
 }
 
 function renderPhotos() {
-  const c1 = document.getElementById('photos-container-1');
-  const c2 = document.getElementById('photos-container-2');
-  if (photos.length === 0) {
-    c1.innerHTML = '<div class="no-photos">No photos yet</div>';
-    c2.innerHTML = '<div class="no-photos">No photos yet</div>';
+  const c1=document.getElementById('photos-container-1');
+  const c2=document.getElementById('photos-container-2');
+  if (!photos.length) {
+    c1.innerHTML='<div class="no-photos">No photos yet</div>';
+    c2.innerHTML='<div class="no-photos">No photos yet</div>';
     return;
   }
-  const url1 = photos[photoIdx % photos.length];
-  c1.innerHTML = `<img src="${url1}" alt="Community photo" onerror="this.style.display='none'">`;
-  if (photos.length > 1) {
-    const url2 = photos[(photoIdx + 1) % photos.length];
-    c2.innerHTML = `<img src="${url2}" alt="Community photo" onerror="this.style.display='none'">`;
-  } else {
-    c2.innerHTML = `<img src="${url1}" alt="Community photo" onerror="this.style.display='none'">`;
-  }
+  loadImg(c1, photos[photoIdx%photos.length]);
+  loadImg(c2, photos.length>1 ? photos[(photoIdx+1)%photos.length] : photos[0]);
 }
 
 function cyclePhoto() {
-  if (photos.length <= 1) return;
+  if (photos.length<=1) return;
   photoIdx++;
   renderPhotos();
 }
@@ -456,22 +496,26 @@ function cyclePhoto() {
 // ============================================================
 function setupQR() {
   if (!QR_CODE_URL) return;
-  document.getElementById('qr-box').innerHTML = `<img src="${QR_CODE_URL}" alt="QR Code">`;
+  const box=document.getElementById('qr-box');
+  const img=document.createElement('img');
+  img.alt='QR Code';
+  img.src=normURL(QR_CODE_URL);
+  img.onerror=function(){ box.innerHTML='<div class="placeholder-text">QR CODE<br>COMING SOON</div>'; };
+  box.innerHTML='';
+  box.appendChild(img);
 }
 
 // ============================================================
 //  Utilities
 // ============================================================
 function goFullscreen() {
-  const e = document.documentElement;
+  const e=document.documentElement;
   (e.requestFullscreen||e.webkitRequestFullscreen||e.mozRequestFullScreen||e.msRequestFullscreen).call(e);
 }
-
 function tick() {
-  document.getElementById('clock').textContent =
+  document.getElementById('clock').textContent=
     new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit'});
 }
-
 async function fetchAll() {
   await Promise.all([fetchSchedule(), fetchAnnouncements(), fetchPhotos()]);
 }
@@ -479,17 +523,13 @@ async function fetchAll() {
 // ============================================================
 //  Init
 // ============================================================
-setupQR();
-tick();
+setupQR(); tick();
 setInterval(tick, 1000);
-
 fetchAll();
-setInterval(fetchAll, REFRESH_INTERVAL);
-
-setInterval(cycleAnnouncement, ANNOUNCEMENT_CYCLE);
+setInterval(fetchAll, REFRESH_MS);
+setInterval(cycleAnn, ANNOUNCEMENT_CYCLE);
 setInterval(cyclePhoto, PHOTO_CYCLE);
-
-document.addEventListener('visibilitychange', () => { if (!document.hidden) fetchAll(); });
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) fetchAll(); });
 </script>
 </body>
 </html>

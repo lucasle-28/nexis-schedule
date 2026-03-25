@@ -392,9 +392,12 @@ function scrollToCurrentTime() {
     return;
   }
 
-  // Scroll so the current-time row is at the top of the visible area
+  // Scroll so the current-time row is centered in the visible area
   const rowTop = currentRow.offsetTop;
-  scrollContainer.scrollTo({ top: rowTop, behavior: 'smooth' });
+  const containerHeight = scrollContainer.clientHeight;
+  const rowHeight = currentRow.offsetHeight;
+  const scrollTarget = rowTop - (containerHeight / 2) + (rowHeight / 2);
+  scrollContainer.scrollTo({ top: Math.max(0, scrollTarget), behavior: 'smooth' });
 }
 
 // ============================================================
@@ -414,7 +417,7 @@ async function fetchSchedule() {
       const topSection = document.querySelector('.top-section');
       const bottomBar = document.querySelector('.bottom-bar');
       const header = document.querySelector('header');
-      const available = window.innerHeight - header.offsetHeight - bottomBar.offsetHeight - 24; // 24px padding/margins
+      const available = window.innerHeight - header.offsetHeight - bottomBar.offsetHeight - 24 - 36; // 36px = 1 hour less visible
       wrapper.style.height = available + 'px';
 
       const theadFixed = wrapper.querySelector('.schedule-thead-fixed');
@@ -607,7 +610,7 @@ window.addEventListener('resize', () => {
   if (wrapper) {
     const header = document.querySelector('header');
     const bottomBar = document.querySelector('.bottom-bar');
-    const available = window.innerHeight - header.offsetHeight - bottomBar.offsetHeight - 24;
+    const available = window.innerHeight - header.offsetHeight - bottomBar.offsetHeight - 24 - 36;
     wrapper.style.height = available + 'px';
     const theadFixed = wrapper.querySelector('.schedule-thead-fixed');
     const scrollBody = document.getElementById('schedule-scroll');

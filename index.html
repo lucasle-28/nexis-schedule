@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,191 +10,198 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; overflow: hidden; }
 
-  body {
-    background: #ffffff;
-    color: #1a1a1a;
-    font-family: 'DM Sans', sans-serif;
-    display: flex;
-    flex-direction: column;
-  }
+body {
+background: #ffffff;
+color: #1a1a1a;
+font-family: ‘DM Sans’, sans-serif;
+display: flex;
+flex-direction: column;
+}
 
-  /* --- TOP: Header + Schedule --- */
-  .top-section { padding: 4px 10px 0; flex-shrink: 0; display: flex; flex-direction: column; }
+/* — TOP: Header + Schedule — */
+.top-section { padding: 4px 10px 0; flex-shrink: 0; display: flex; flex-direction: column; }
 
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-    height: 22px;
-  }
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 4px;
+height: 22px;
+}
 
-  .logo-area { display: flex; align-items: baseline; gap: 8px; }
-  .logo-area h1 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; }
-  .logo-area .subtitle { font-size: 0.55rem; color: #aaa; letter-spacing: 0.03em; }
+.logo-area { display: flex; align-items: baseline; gap: 8px; }
+.logo-area h1 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; }
+.logo-area .subtitle { font-size: 0.55rem; color: #aaa; letter-spacing: 0.03em; }
 
-  .meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .meta .clock { font-size: 0.65rem; font-weight: 500; }
-  .meta .update-line { font-size: 0.5rem; color: #ccc; }
-  .controls { display: flex; gap: 4px; }
-  .controls button {
-    background: #fff; color: #aaa; border: 1px solid #e8e8e8;
-    padding: 1px 6px; border-radius: 2px; font-size: 0.5rem;
-    cursor: pointer; font-family: 'JetBrains Mono', monospace;
-  }
-  .controls button:hover { color: #1a1a1a; border-color: #1a1a1a; }
+.meta {
+display: flex;
+align-items: center;
+gap: 8px;
+font-family: ‘JetBrains Mono’, monospace;
+}
+.meta .clock { font-size: 0.65rem; font-weight: 500; }
+.meta .update-line { font-size: 0.5rem; color: #ccc; }
+.controls { display: flex; gap: 4px; }
+.controls button {
+background: #fff; color: #aaa; border: 1px solid #e8e8e8;
+padding: 1px 6px; border-radius: 2px; font-size: 0.5rem;
+cursor: pointer; font-family: ‘JetBrains Mono’, monospace;
+}
+.controls button:hover { color: #1a1a1a; border-color: #1a1a1a; }
 
-  /* Schedule wrapper — sticky header + scrollable body */
-  .schedule-wrapper {
-    position: relative;
-    overflow: hidden;
-    flex: 1;
-  }
+/* Schedule wrapper — sticky header + scrollable body */
+.schedule-wrapper {
+position: relative;
+overflow: hidden;
+flex: 1;
+}
 
-  /* Sticky table header */
-  .schedule-thead-fixed {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    background: #fff;
-  }
-  .schedule-thead-fixed table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    border: 1px solid #ddd;
-    border-bottom: none;
-  }
-  .schedule-thead-fixed th {
-    padding: 3px 4px; font-weight: 500; font-size: 0.58rem;
-    text-transform: uppercase; letter-spacing: 0.1em;
-    color: #ccc; text-align: center; border: 1px solid #ddd;
-    background: #fff;
-  }
-  .schedule-thead-fixed th:first-child { width: 62px; text-align: right; padding-right: 6px; }
-  .schedule-thead-fixed th.current-day { color: #1a1a1a; font-weight: 600; }
+/* Sticky table header */
+.schedule-thead-fixed {
+position: sticky;
+top: 0;
+z-index: 2;
+background: #fff;
+}
+.schedule-thead-fixed table {
+width: 100%;
+border-collapse: collapse;
+table-layout: fixed;
+border: 1px solid #ddd;
+border-bottom: none;
+}
+.schedule-thead-fixed th {
+padding: 3px 4px; font-weight: 500; font-size: 0.58rem;
+text-transform: uppercase; letter-spacing: 0.1em;
+color: #ccc; text-align: center; border: 1px solid #ddd;
+background: #fff;
+}
+.schedule-thead-fixed th:first-child { width: 62px; text-align: right; padding-right: 6px; }
+.schedule-thead-fixed th.current-day { color: #1a1a1a; font-weight: 600; }
 
-  /* Scrollable body */
-  .schedule-body-scroll {
-    overflow: hidden;
-    height: calc(100% - 22px); /* subtract header row height */
-  }
-  .schedule-body-scroll table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    border: 1px solid #ddd;
-    border-top: none;
-  }
+/* Scrollable body */
+.schedule-body-scroll {
+overflow-y: auto;
+scrollbar-width: none; /* Firefox */
+-ms-overflow-style: none; /* IE/Edge */
+height: calc(100% - 22px); /* subtract header row height */
+}
+.schedule-body-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+.schedule-body-scroll table {
+width: 100%;
+border-collapse: collapse;
+table-layout: fixed;
+border: 1px solid #ddd;
+border-top: none;
+}
 
-  /* Schedule table cells */
-  .schedule-body-scroll td {
-    padding: 0 2px; font-size: 0.6rem; text-align: center;
-    height: 18px; vertical-align: middle; border: 1px solid #e5e5e5;
-  }
-  .schedule-body-scroll td:first-child {
-    font-family: 'JetBrains Mono', monospace; font-size: 0.5rem;
-    color: #d0d0d0; text-align: right; padding-right: 6px;
-    width: 62px;
-  }
-  .schedule-body-scroll td.current-day-col { background: #fafafc; }
-  .schedule-body-scroll td.has-event { font-weight: 500; font-size: 0.55rem; letter-spacing: 0.01em; }
-  .schedule-body-scroll tr.current-time-row td { border-bottom: 1.5px solid #1a1a1a; }
+/* Schedule table cells */
+.schedule-body-scroll td {
+padding: 0 2px; font-size: 0.6rem; text-align: center;
+height: 18px; vertical-align: middle; border: 1px solid #e5e5e5;
+}
+.schedule-body-scroll td:first-child {
+font-family: ‘JetBrains Mono’, monospace; font-size: 0.5rem;
+color: #d0d0d0; text-align: right; padding-right: 6px;
+width: 62px;
+}
+.schedule-body-scroll td.current-day-col { background: #fafafc; }
+.schedule-body-scroll td.has-event { font-weight: 500; font-size: 0.55rem; letter-spacing: 0.01em; }
+.schedule-body-scroll tr.current-time-row td { border-bottom: 1.5px solid #1a1a1a; }
 
-  .status { text-align: center; padding: 20px; color: #ddd; font-size: 0.75rem; }
-  .status.error { color: #e57373; }
+.status { text-align: center; padding: 20px; color: #ddd; font-size: 0.75rem; }
+.status.error { color: #e57373; }
 
-  .dot {
-    display: inline-block; width: 5px; height: 5px;
-    border-radius: 50%; background: #b8e6b8; margin-right: 4px;
-  }
+.dot {
+display: inline-block; width: 5px; height: 5px;
+border-radius: 50%; background: #b8e6b8; margin-right: 4px;
+}
 
-  /* --- BOTTOM BAR --- */
-  .bottom-bar {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: stretch;
-    border-top: 1px solid #e5e5e5;
-    margin: 6px 10px 6px;
-    gap: 10px;
-    min-height: 140px;
-    padding-top: 8px;
-  }
+/* — BOTTOM BAR — */
+.bottom-bar {
+flex: 0 0 140px;
+display: flex;
+align-items: stretch;
+border-top: 1px solid #e5e5e5;
+margin: 6px 10px 6px;
+gap: 10px;
+max-height: 140px;
+padding-top: 8px;
+overflow: hidden;
+}
 
-  /* QR Code */
-  .qr-section {
-    flex: 0 0 auto;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 4px; padding: 0 6px;
-  }
-  .qr-box {
-    width: 100px; height: 100px;
-    border: 2px dashed #ddd; border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    background: #fafafa; overflow: hidden;
-  }
-  .qr-box img { width: 100%; height: 100%; object-fit: contain; }
-  .qr-box .placeholder-text {
-    font-size: 0.5rem; color: #ccc; text-align: center;
-    padding: 4px; font-family: 'JetBrains Mono', monospace;
-  }
-  .qr-label {
-    font-size: 0.48rem; color: #aaa; text-align: center;
-    font-weight: 500; letter-spacing: 0.03em;
-  }
+/* QR Code */
+.qr-section {
+flex: 0 0 auto;
+display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+gap: 4px; padding: 0 6px;
+}
+.qr-box {
+width: 100px; height: 100px;
+border: 2px dashed #ddd; border-radius: 6px;
+display: flex; align-items: center; justify-content: center;
+background: #fafafa; overflow: hidden;
+}
+.qr-box img { width: 100%; height: 100%; object-fit: contain; }
+.qr-box .placeholder-text {
+font-size: 0.5rem; color: #ccc; text-align: center;
+padding: 4px; font-family: ‘JetBrains Mono’, monospace;
+}
+.qr-label {
+font-size: 0.48rem; color: #aaa; text-align: center;
+font-weight: 500; letter-spacing: 0.03em;
+}
 
-  /* Announcements — stacked */
-  .announcements-section {
-    flex: 1; display: flex; flex-direction: column;
-    min-width: 0; justify-content: center; padding: 0 8px;
-  }
-  .announcements-header {
-    font-size: 0.52rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.1em; color: #bbb; margin-bottom: 6px;
-  }
-  .announcement-stack {
-    display: flex; flex-direction: column; gap: 5px;
-  }
-  .announcement-item {
-    font-size: 0.7rem; font-weight: 500; color: #333; line-height: 1.35;
-    border-left: 2px solid #ddd; padding-left: 8px;
-    animation: fadeIn 0.4s ease;
-  }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  .announcement-sub {
-    font-size: 0.5rem; color: #aaa; margin-top: 1px; font-weight: 400;
-  }
-  .page-dots {
-    display: flex; gap: 4px; margin-top: 6px; justify-content: center;
-  }
-  .page-dots span {
-    width: 4px; height: 4px; border-radius: 50%;
-    background: #ddd; transition: background 0.3s;
-  }
-  .page-dots span.active { background: #888; }
-  .no-announcements { font-size: 0.6rem; color: #ddd; font-style: italic; }
+/* Announcements — stacked */
+.announcements-section {
+flex: 1; display: flex; flex-direction: column;
+min-width: 0; justify-content: center; padding: 0 8px;
+}
+.announcements-header {
+font-size: 0.52rem; font-weight: 600; text-transform: uppercase;
+letter-spacing: 0.1em; color: #bbb; margin-bottom: 6px;
+}
+.announcement-stack {
+display: flex; flex-direction: column; gap: 5px;
+}
+.announcement-item {
+font-size: 0.7rem; font-weight: 500; color: #333; line-height: 1.35;
+border-left: 2px solid #ddd; padding-left: 8px;
+animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.announcement-sub {
+font-size: 0.5rem; color: #aaa; margin-top: 1px; font-weight: 400;
+}
+.page-dots {
+display: flex; gap: 4px; margin-top: 6px; justify-content: center;
+}
+.page-dots span {
+width: 4px; height: 4px; border-radius: 50%;
+background: #ddd; transition: background 0.3s;
+}
+.page-dots span.active { background: #888; }
+.no-announcements { font-size: 0.6rem; color: #ddd; font-style: italic; }
 
-  /* Photos */
-  .photos-section {
-    flex: 0 0 200px;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden; border-radius: 6px; background: #fafafa;
-    position: relative;
-  }
-  .photos-section img {
-    max-width: 100%; max-height: 100%; object-fit: contain;
-    border-radius: 4px; transition: opacity 0.5s;
-  }
-  .photos-section .no-photos {
-    font-size: 0.55rem; color: #ddd; font-style: italic; text-align: center;
-  }
+/* Photos */
+.photos-section {
+flex: 0 0 200px;
+display: flex; align-items: center; justify-content: center;
+overflow: hidden; border-radius: 6px; background: #fafafa;
+position: relative;
+max-height: 130px;
+}
+.photos-section img {
+max-width: 100%; max-height: 130px; object-fit: contain;
+border-radius: 4px; transition: opacity 0.5s;
+display: block;
+}
+.photos-section .no-photos {
+font-size: 0.55rem; color: #ddd; font-style: italic; text-align: center;
+}
 </style>
+
 </head>
 <body>
 
@@ -391,20 +399,8 @@ function scrollToCurrentTime(instant) {
     return;
   }
 
-  // Use getBoundingClientRect for reliable offset calculation
-  const containerRect = scrollContainer.getBoundingClientRect();
-  const rowRect = currentRow.getBoundingClientRect();
-  const currentScrollTop = scrollContainer.scrollTop;
-
-  // Where the row currently is relative to the container top + current scroll
-  const rowOffsetInScroll = rowRect.top - containerRect.top + currentScrollTop;
-  const containerHeight = scrollContainer.clientHeight;
-  const rowHeight = currentRow.offsetHeight;
-
-  // Center the row in the visible area
-  const scrollTarget = rowOffsetInScroll - (containerHeight / 2) + (rowHeight / 2);
-  scrollContainer.scrollTo({
-    top: Math.max(0, scrollTarget),
+  currentRow.scrollIntoView({
+    block: 'center',
     behavior: instant ? 'instant' : 'smooth'
   });
 }
@@ -630,5 +626,6 @@ window.addEventListener('resize', () => {
   }
 });
 </script>
+
 </body>
 </html>
